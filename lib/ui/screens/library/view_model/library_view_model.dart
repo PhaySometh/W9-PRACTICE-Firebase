@@ -1,16 +1,17 @@
 import 'package:flutter/material.dart';
-import '../../../../data/repositories/songs/song_repository.dart';
+import 'package:week9_practice_firebase/data/services/music_service.dart';
+import 'package:week9_practice_firebase/model/songs/song_detail.dart';
 import '../../../states/player_state.dart';
 import '../../../../model/songs/song.dart';
 import '../../../utils/async_value.dart';
 
 class LibraryViewModel extends ChangeNotifier {
-  final SongRepository songRepository;
+  final MusicService musicService;
   final PlayerState playerState;
 
-  AsyncValue<List<Song>> songsValue = AsyncValue.loading();
+  AsyncValue<List<SongDetail>> songDetailsValue = AsyncValue.loading();
 
-  LibraryViewModel({required this.songRepository, required this.playerState}) {
+  LibraryViewModel({required this.musicService, required this.playerState}) {
     playerState.addListener(notifyListeners);
 
     // init
@@ -29,18 +30,18 @@ class LibraryViewModel extends ChangeNotifier {
 
   void fetchSong() async {
     // 1- Loading state
-    songsValue = AsyncValue.loading();
+    songDetailsValue = AsyncValue.loading();
     notifyListeners();
 
     try {
       // 2- Fetch is successfull
-      List<Song> songs = await songRepository.fetchSongs();
-      songsValue = AsyncValue.success(songs);
+      List<SongDetail> songDetail = await musicService.fetchSongDetails();
+      songDetailsValue = AsyncValue.success(songDetail);
     } catch (e) {
       // 3- Fetch is unsucessfull
-      songsValue = AsyncValue.error(e);
+      songDetailsValue = AsyncValue.error(e);
     }
-     notifyListeners();
+    notifyListeners();
 
   }
 

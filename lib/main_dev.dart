@@ -1,6 +1,7 @@
 import 'package:provider/provider.dart';
 import 'package:week9_practice_firebase/data/repositories/artists/artist_repository.dart';
 import 'package:week9_practice_firebase/data/repositories/artists/artist_repository_firebase.dart';
+import 'package:week9_practice_firebase/data/services/music_service.dart';
 
 import 'data/repositories/songs/song_repository_firebase.dart';
 import 'main_common.dart';
@@ -20,6 +21,14 @@ List<InheritedProvider> get devProviders {
     
     // W9 - 02
     Provider<ArtistRepository>(create: (_) => AritistRepositoryFirebase()),
+    
+    // W9 - 03
+    Provider<MusicService>(
+      create: (context) => MusicService(
+        songRepository: context.read<SongRepository>(), 
+        artistRepository: context.read<ArtistRepository>(),
+      ),
+    ),
 
     // 2 - Inject the player state
     ChangeNotifierProvider<PlayerState>(create: (_) => PlayerState()),
